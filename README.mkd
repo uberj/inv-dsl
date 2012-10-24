@@ -3,6 +3,8 @@ Requirements:
 ply
 ```
 
+When you build the parser there are some errors:
+```
 WARNING: shift/reduce conflict for AND in state 21 resolved as shift
 WARNING: shift/reduce conflict for OR in state 21 resolved as shift
 WARNING: shift/reduce conflict for NOT in state 21 resolved as shift
@@ -10,5 +12,6 @@ WARNING: shift/reduce conflict for LPAREN in state 21 resolved as shift
 WARNING: shift/reduce conflict for DIRECTIVE in state 21 resolved as shift
 WARNING: shift/reduce conflict for TEXT in state 21 resolved as shift
 WARNING: shift/reduce conflict for RE in state 21 resolved as shift
+```
 
 These are OK. The parser doesn't know whether to reduce an ``expression OR expression`` and decides to shift's the OR statement onto the stack. This is what we want because a space between two terms implies and AND, and OR is always the last thing you should do.
