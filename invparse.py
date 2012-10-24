@@ -28,6 +28,8 @@ class UOP(object):
 
 precedence = (
     ('left', 'AND'),
+    ('left', 'IMPAND'),
+    ('left', 'PAREN'),
     ('right', 'NOT'),
     )
 
@@ -35,20 +37,25 @@ def p_statement_expr(p):
     'statement : expression'
     p[0] = p[1]
 
-def p_expression_expr_factor(p):
-    'expression : expression factor'
+def p_expression_expr_term(p):
+    'expression : expression term %prec IMPAND'
     p[0] = BOP('AND', p[1], p[2])
 
-def p_expression_factor(p):
-    'expression : factor'
+def p_expression_term(p):
+    'expression : term'
     p[0] = p[1]
 
+def p_expression_uminus(p):
+    'expression : NOT expression'
+    p[0] = UOP('NOT', p[2])
+
+
 def p_expression_binop(p):
-    '''expression : expression AND expression
+    '''expression : expression OR expression
                   | expression NOT expression
-                  | expression OR expression
-                  | LPAREN expression RPAREN expression
-                  | expression LPAREN expression RPAREN'''
+                  | expression AND expression
+                  | LPAREN expression RPAREN expression %prec PAREN
+                  | expression LPAREN expression RPAREN %prec PAREN'''
     if p[2] == 'NOT':
         p3_invert = UOP('NOT', p[3])
         p[0] = BOP('AND', p[1], p3_invert)
@@ -60,22 +67,10 @@ def p_expression_binop(p):
         p[0] = BOP('AND', p[1], p[3])
 
 
-def p_expression_uminus(p):
-    'expression : NOT expression'
-    p[0] = UOP('NOT', p[2])
-
 
 def p_expression_group(p):
-    'expression : LPAREN expression RPAREN'
+    'expression : LPAREN expression RPAREN %prec PAREN'
     p[0] = p[2]
-
-def p_factor(p):
-    '''factor : NOT term
-              | term'''
-    if len(p) == 3:
-        p[0] = UOP('NOT', p[2])
-    else:
-        p[0] = p[1]
 
 def p_term_DIRECTIVE(p):
     'term : DIRECTIVE'
