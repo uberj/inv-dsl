@@ -3,18 +3,18 @@ import re
 import ply.lex as lex
 from invfilter import *
 
+
 class InvLexer(object):
 
     tokens = (
-        'TEXT','DIRECTIVE', 'RE',
-        'AND','NOT','OR',
-        'LPAREN','RPAREN',
-        )
+        'TEXT', 'DIRECTIVE', 'RE',
+        'AND', 'NOT', 'OR',
+        'LPAREN', 'RPAREN',
+    )
 
     # Tokens
-
-    t_LPAREN  = r'\('
-    t_RPAREN  = r'\)'
+    t_LPAREN = r'\('
+    t_RPAREN = r'\)'
 
     def t_NOT(self, t):
         r'-'
@@ -50,7 +50,6 @@ class InvLexer(object):
         r'[a-zA-Z0-9_\.]+'
         t.value = TextFilter(t.value)
         return t
-
 
     # Ignored characters
     t_ignore = " \t"

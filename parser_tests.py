@@ -3,15 +3,17 @@ import unittest
 from invparse import build_parser
 from utils import make_stack
 
+
 class TestParser(unittest.TestCase):
     def compare(self, ss, expected_stack_str):
         parse = build_parser()
         root_node = parse(ss)
         stack = make_stack(root_node)
-        actual =  ' '.join(stack)
+        actual = ' '.join(stack)
         self.assertEqual(actual, expected_stack_str, msg="Actual: {0} "
-                "Excpected: {1} Parsing: {2}".format(actual, expected_stack_str,
-                    ss))
+                         "Excpected: {1} Parsing: {2}".format(actual,
+                         expected_stack_str, ss))
+
     def test1(self):
         ss = "(a AND (b OR (c d)))"
         exp = 'a b c d AND OR AND'
@@ -77,7 +79,6 @@ class TestParser(unittest.TestCase):
         exp = 'a b c AND OR'
         self.compare(ss, exp)
 
-
     def test13(self):
         ss = "(a (b OR c))"
         exp = 'a b c OR AND'
@@ -132,7 +133,6 @@ class TestParser(unittest.TestCase):
         ss = "a b d OR c f g"
         exp = 'a b AND d AND c f AND g AND OR'
         self.compare(ss, exp)
-
 
 
 if __name__ == "__main__":

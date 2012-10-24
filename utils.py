@@ -1,5 +1,6 @@
 import pdb
 
+
 def make_stack(node):
     def _make_stack(stack, node):
         if not node:
@@ -20,8 +21,10 @@ def make_stack(node):
     _make_stack(stack, node)
     return stack
 
+
 def print_stack(stack):
     print ' '.join([token.value for token in stack])
+
 
 def istype(a, b):
     if not a:

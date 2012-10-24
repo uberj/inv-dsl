@@ -10,6 +10,7 @@ class _Filter(object):
     def compile_Q(self, ntype):
         pass
 
+
 class TextFilter(_Filter):
     def __init__(self, rvalue):
         self.value = rvalue
@@ -18,9 +19,11 @@ class TextFilter(_Filter):
     def compile_Q(self, value):
         pass
 
+
 class REFilter(TextFilter):
     def compile_Q(self, value):
         pass
+
 
 class DirectiveFilter(_Filter):
     def __init__(self, rvalue, directive, dvalue):
@@ -31,4 +34,3 @@ class DirectiveFilter(_Filter):
 
     def compile_Q(self, directive, dvalue):
         pass
-
