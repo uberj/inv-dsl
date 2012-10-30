@@ -10,13 +10,13 @@ def make_stack(node):
                 _make_stack(stack, node.l_child)
             if hasattr(node, 'r_child'):
                 _make_stack(stack, node.r_child)
-            stack.append(node.value)
+            stack.append(node)
         else:
             if hasattr(node, 'child'):
                 _make_stack(stack, node.child)
-                stack.append(node.value)
+                stack.append(node)
             else:
-                stack.append(node.value)
+                stack.append(node)
     stack = []
     _make_stack(stack, node)
     return stack

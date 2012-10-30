@@ -9,7 +9,7 @@ class TestParser(unittest.TestCase):
         parse = build_parser()
         root_node = parse(ss)
         stack = make_stack(root_node)
-        actual = ' '.join(stack)
+        actual = ' '.join([n.value for n in stack])
         self.assertEqual(actual, expected_stack_str, msg="Actual: {0} "
                          "Excpected: {1} Parsing: {2}".format(actual,
                          expected_stack_str, ss))
