@@ -17,7 +17,7 @@ class InvLexer(object):
     t_RPAREN = r'\)'
 
     def t_NOT(self, t):
-        r'-'
+        r'\s*-'
         t.value = 'NOT'
         return t
 
