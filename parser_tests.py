@@ -134,6 +134,21 @@ class TestParser(unittest.TestCase):
         exp = 'a b AND d AND c f AND g AND OR'
         self.compare(ss, exp)
 
+    def test24(self):
+        ss = "-type=:A"
+        exp = "type=:A NOT"
+        self.compare(ss, exp)
+
+    def test25(self):
+        ss = "foopy -type=:A"
+        exp = "foopy type=:A NOT AND"
+        self.compare(ss, exp)
+
+    def test26(self):
+        ss = "ix-mn-xp32-y-xxxx.inband.foo.bar.com"
+        exp = "ix-mn-xp32-y-xxxx.inband.foo.bar.com"
+        self.compare(ss, exp)
+
 
 if __name__ == "__main__":
     unittest.main()
