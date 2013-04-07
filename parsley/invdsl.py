@@ -1,41 +1,39 @@
-import parsley
-from ometa.runtime import ParseError
+from parsley import wrapGrammar
+
+from ometa.grammar import OMeta
+from ometa.runtime import OMetaBase
 
 
-class ICompiler(object):
-    ParseError = ParseError
-    g = None  # Memozie
+fname = 'invdsl.parsley'
+name = 'InvDSL'
+g = open(fname).read()
+B = OMeta.makeGrammar(g, name=name).createParserClass(OMetaBase, globals())
 
-    def __init__(self, fname, DEBUG=False):
-        self.fname = fname
-        self.DEBUG = DEBUG
 
-    def __call__(self, *args, **kwargs):
-        grammar_text = open(self.fname).read()
-        g = parsley.makeGrammar(
-            grammar_text, self.bindings
-        )
-        return g(*args, **kwargs)
+class ICompiler(B):
+    def directive(self, d, v):
+        raise NotImplemented()
 
-    def print_grammar(self):
-        print '-------------------'
-        print self.grammar_text
-        print '-------------------'
+    def regexpr(self, r):
+        raise NotImplemented()
+
+    def text(self, t):
+        raise NotImplemented()
+
+    def compile(self, initial, values):
+        raise NotImplemented()
+
+    def OR_op(self, a, b):
+        raise NotImplemented()
+
+    def AND_op(self, a, b):
+        raise NotImplemented()
+
+    def NOT_op(self, a):
+        raise NotImplemented()
 
 
 class DebugCompiler(ICompiler):
-    def __init__(self, fname, **kwargs):
-        self.bindings = {
-            'directive': self.directive,
-            'regexpr': self.regexpr,
-            'text': self.text,
-            'compile': self.arith_compile,
-            'AND_op': lambda a, b: '({a} AND {b})'.format(a=a, b=b),
-            'OR_op': lambda a, b: '({a} OR {b})'.format(a=a, b=b),
-            'NOT_op': lambda a: '(NOT {0})'.format(a)
-        }
-        super(DebugCompiler, self).__init__(fname, **kwargs)
-
     def directive(self, d, v):
         print 'matched DRCT ' + str((d, v))
         return d, v
@@ -48,18 +46,28 @@ class DebugCompiler(ICompiler):
         print 'matched TEXT ' + t
         return t
 
-    def arith_compile(self, initial, values):
+    def compile(self, initial, values):
         print initial, values
         ret = initial
         for op, value in values:
             ret = op(ret, value)
         return ret
-    def OR(self):
-        return
 
+    def OR_op(self, a, b):
+        return '({0} {1} {2})'.format(a, 'OR', b)
+
+    def AND_op(self, a, b):
+        return '({0} {1} {2})'.format(a, 'AND', b)
+
+    def NOT_op(self, a):
+        return '({0} {1})'.format('NOT', a)
+
+
+def make_compiler():
+    return wrapGrammar(DebugCompiler)
 
 
 if __name__ == '__main__':
     import sys
-    invdsl = DebugCompiler('invdsl.parsley')
+    invdsl = make_compiler()
     print invdsl(sys.argv[1]).expr()

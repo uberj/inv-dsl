@@ -1,18 +1,22 @@
 import unittest
 
-from invdsl import DebugCompiler
+from ometa.runtime import ParseError
+
+from invdsl import make_compiler
 
 grammar_file = 'invdsl.parsley'
 
+
 class T(unittest.TestCase):
     def setUp(self):
-        self.test_g = DebugCompiler(grammar_file)
+        self.test_g = make_compiler()
 
     def parse(self, input_):
         return getattr(self.test_g(input_), self.rule)()
 
     def fail(self, input_):
-        self.assertRaises(self.test_g.ParseError, self.parse, input_)
+        self.assertRaises(ParseError, self.parse, input_)
+
 
 class DRCTTest(T):
     rule = 'DRCT'
@@ -31,6 +35,7 @@ class DRCTTest(T):
 
     def test4(self):
         self.fail('foo')
+
 
 class TextTest(T):
     rule = 'TEXT'
@@ -74,6 +79,7 @@ class RETest(T):
         t = '/foo /bar'
         self.fail(t)
 
+
 class ANDTest(T):
     rule = 'AND'
 
@@ -85,6 +91,7 @@ class ANDTest(T):
         t = 'aND'
         self.assertTrue(callable(self.parse(t)))
 
+
 class ORTest(T):
     rule = 'OR'
 
@@ -95,6 +102,7 @@ class ORTest(T):
     def test2(self):
         t = 'oR'
         self.assertTrue(callable(self.parse(t)))
+
 
 class BoolEXPRTest(T):
     rule = 'expr'
@@ -129,6 +137,7 @@ class BoolEXPRTest(T):
         out = '(8 OR (8 AND 8))'
         self.assertEqual(out, self.parse(t))
 
+
 class BareNOTTests(T):
     rule = 'value'
 
@@ -141,6 +150,7 @@ class BareNOTTests(T):
         t = 'a'
         out = 'a'
         self.assertEqual(out, self.parse(t))
+
 
 class EXPRTests(T):
     rule = 'expr'
