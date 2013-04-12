@@ -3,6 +3,10 @@ from parsley import wrapGrammar
 from ometa.grammar import OMeta
 from ometa.runtime import OMetaBase
 
+from ometa.grammar import TreeTransformerGrammar
+from ometa.runtime import TreeTransformerBase
+
+
 
 fname = 'invdsl.parsley'
 name = 'InvDSL'
